@@ -1,6 +1,8 @@
 package com.ibm.garrypolykoff.toneanalyzer;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -11,6 +13,8 @@ import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -35,8 +39,7 @@ public class MainActivity extends AppCompatActivity {
     private EditText messageToAnalyze;
     private TextView analsisTextView;
     private Button analysisButton;
-    private Map valuesMap = new HashMap() ;
-
+    private Map valuesMap = new HashMap();
 
 
     /**
@@ -65,6 +68,8 @@ public class MainActivity extends AppCompatActivity {
         });
 
         messageToAnalyze = (EditText) findViewById(R.id.messageEditText);
+
+
         analysisButton = (Button) findViewById(R.id.sendAnalysisButton);
         analsisTextView = (TextView) findViewById(R.id.analysisTextView);
 
@@ -73,10 +78,15 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-                if (!messageToAnalyze.getText().toString().isEmpty()){
+                    InputMethodManager imm =  (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
 
-                  String message = messageToAnalyze.getText().toString();
-                  new ToneAnalyzerCall().execute(message, null, null);
+
+
+                if (!messageToAnalyze.getText().toString().isEmpty()) {
+
+                    String message = messageToAnalyze.getText().toString();
+                    new ToneAnalyzerCall().execute(message, null, null);
 
                 }
 
@@ -84,10 +94,12 @@ public class MainActivity extends AppCompatActivity {
             }
 
         });
+
+
     }
 
 
-    private class ToneAnalyzerCall extends AsyncTask<String , Void, Void> {
+    private class ToneAnalyzerCall extends AsyncTask<String, Void, Void> {
         ProgressDialog pdLoading = new ProgressDialog(MainActivity.this);
         ToneAnalysis tone = null;
         boolean success = false;
@@ -98,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
 
             ToneAnalyzer service = new ToneAnalyzer(ToneAnalyzer.VERSION_DATE_2016_05_19);
             service.setUsernameAndPassword("260ba98a-1ec2-405b-8795-55b861930b54", "6Lth0ZwxtJE6");
-          //  service.setEndPoint("https://gateway.watsonplatform.net/tone-analyzer/api");
+            //  service.setEndPoint("https://gateway.watsonplatform.net/tone-analyzer/api");
             // EditText text = (EditText) findViewById(R.id.analyzeEditText);
             Log.e("Param", params[0]);
             String value = params[0];
@@ -119,7 +131,6 @@ public class MainActivity extends AppCompatActivity {
             pdLoading.setMessage("\tLoading...");
             pdLoading.show();
         }
-
 
 
         @Override
@@ -154,7 +165,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
-   
+
 
 
     @Override
@@ -178,4 +189,19 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    private class MyFocusChangeListener implements  View.OnFocusChangeListener {
+
+        public void onFocusChange(View v, boolean hasFocus){
+
+            if(v.getId() == R.id.messageEditText && !hasFocus) {
+
+                InputMethodManager imm =  (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+
+            }
+        }
+    }
+
+
 }
