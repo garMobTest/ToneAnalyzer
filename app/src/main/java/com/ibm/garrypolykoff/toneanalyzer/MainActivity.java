@@ -154,38 +154,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
-    private void getToneAnalyzer() {
-
-        ToneAnalysis tone = null;
-        valuesMap.clear();
-
-        new Thread() {
-            public void run() {
-                ToneAnalyzer service = new ToneAnalyzer(ToneAnalyzer.VERSION_DATE_2016_05_19);
-                service.setUsernameAndPassword("260ba98a-1ec2-405b-8795-55b861930b54", "6Lth0ZwxtJE6");
-               service.setEndPoint("https://gateway.watsonplatform.net/tone-analyzer/api");
-                // EditText text = (EditText) findViewById(R.id.analyzeEditText);
-
-                String value = messageToAnalyze.getText().toString();
-
-                // Call the service and get the tone
-                ToneAnalysis tone = service.getTone(value, null).execute();
-                System.out.println("Tone: " + tone);
-
-
-                for (ToneCategory tc : tone.getDocumentTone().getTones()) {
-                    for (ToneScore ts : tc.getTones()) {
-
-                        valuesMap.put(ts.getName(), ts.getScore());
-
-                    }
-                }
-
-
-            }
-        }.start();
-
-    }
+   
 
 
     @Override
