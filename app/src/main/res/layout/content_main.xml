@@ -36,7 +36,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/sendAnalysisButton"
         android:layout_marginTop="32dp"
-        android:layout_below="@+id/analysisTextView"
+        android:layout_below="@+id/gridView"
         android:layout_alignParentEnd="true" />
 
     <GridLayout
